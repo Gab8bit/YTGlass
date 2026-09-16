@@ -9,6 +9,8 @@ struct QueueRowView: View {
     @EnvironmentObject private var queue: DownloadQueueManager
     @EnvironmentObject private var loc: LocalizationManager
 
+    @State private var showCodecTooltip = false
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             thumbnail
@@ -103,13 +105,24 @@ struct QueueRowView: View {
     }
 
     private var codecWarningBadge: some View {
-        Label(loc.t(.codecWarningBadge), systemImage: "exclamationmark.triangle.fill")
+        let explanation = loc.t(.codecWarningTooltipTemplate, item.videoCodec?.uppercased() ?? "")
+        return Label(loc.t(.codecWarningBadge), systemImage: "exclamationmark.triangle.fill")
             .font(.caption2.weight(.semibold))
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .foregroundStyle(.orange)
             .background(Color.orange.opacity(0.15), in: Capsule())
-            .help(loc.t(.codecWarningTooltipTemplate, item.videoCodec?.uppercased() ?? ""))
+            .help(explanation)
+            .onHover { hovering in
+                showCodecTooltip = hovering
+            }
+            .popover(isPresented: $showCodecTooltip, arrowEdge: .bottom) {
+                Text(explanation)
+                    .font(.callout)
+                    .padding(14)
+                    .frame(width: 260)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
     }
 
     @ViewBuilder
