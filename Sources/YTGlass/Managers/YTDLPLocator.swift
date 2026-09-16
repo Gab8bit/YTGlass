@@ -3,6 +3,7 @@ import Foundation
 enum YTDLPLocator {
     private static var cachedYTDLPPath: String?
     private static var cachedFFmpegPath: String?
+    private static var cachedFFprobePath: String?
 
     static func ytdlpPath() -> String? {
         if let cached = cachedYTDLPPath { return cached }
@@ -15,6 +16,13 @@ enum YTDLPLocator {
         if let cached = cachedFFmpegPath { return cached }
         let path = locate(binary: "ffmpeg")
         cachedFFmpegPath = path
+        return path
+    }
+
+    static func ffprobePath() -> String? {
+        if let cached = cachedFFprobePath { return cached }
+        let path = locate(binary: "ffprobe")
+        cachedFFprobePath = path
         return path
     }
 

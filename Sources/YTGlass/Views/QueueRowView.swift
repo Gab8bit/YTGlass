@@ -23,6 +23,9 @@ struct QueueRowView: View {
                     if item.downloadSubtitles {
                         badge(loc.t(.subtitlesBadge), systemImage: "captions.bubble")
                     }
+                    if item.hasPlaybackCompatibilityWarning {
+                        codecWarningBadge
+                    }
                     Text(statusText)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -97,6 +100,16 @@ struct QueueRowView: View {
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .background(.secondary.opacity(0.15), in: Capsule())
+    }
+
+    private var codecWarningBadge: some View {
+        Label(loc.t(.codecWarningBadge), systemImage: "exclamationmark.triangle.fill")
+            .font(.caption2.weight(.semibold))
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .foregroundStyle(.orange)
+            .background(Color.orange.opacity(0.15), in: Capsule())
+            .help(loc.t(.codecWarningTooltipTemplate, item.videoCodec?.uppercased() ?? ""))
     }
 
     @ViewBuilder

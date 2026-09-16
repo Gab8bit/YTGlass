@@ -30,6 +30,8 @@ enum LocKey: String {
     case statusFailed
     case statusCancelled
     case subtitlesBadge
+    case codecWarningBadge
+    case codecWarningTooltipTemplate
 
     case newDownloadTitle
     case urlPlaceholder
@@ -100,6 +102,8 @@ private let italianStrings: [LocKey: String] = [
     .statusFailed: "Fallito",
     .statusCancelled: "Annullato",
     .subtitlesBadge: "Sottotitoli",
+    .codecWarningBadge: "Possibile incompatibilità",
+    .codecWarningTooltipTemplate: "Alcuni lettori (come QuickTime Player) potrebbero non riuscire a riprodurre il video di questo file, codificato in %@. Prova a scaricarlo a 1080p o inferiore, oppure usa un lettore come VLC.",
 
     .newDownloadTitle: "Nuovo download",
     .urlPlaceholder: "Incolla un link (YouTube e non solo)…",
@@ -170,6 +174,8 @@ private let englishStrings: [LocKey: String] = [
     .statusFailed: "Failed",
     .statusCancelled: "Cancelled",
     .subtitlesBadge: "Subtitles",
+    .codecWarningBadge: "Possible incompatibility",
+    .codecWarningTooltipTemplate: "Some players (like QuickTime Player) may not be able to play the video in this file, encoded in %@. Try downloading it at 1080p or lower, or use a player like VLC.",
 
     .newDownloadTitle: "New download",
     .urlPlaceholder: "Paste a link (YouTube and more)…",

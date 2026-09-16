@@ -40,8 +40,19 @@ struct DownloadItem: Identifiable, Codable, Equatable {
     var eta: String
     var errorMessage: String?
     var finalFilePath: String?
+    var videoCodec: String?
 
     var dateAdded: Date
+
+    /// Codecs QuickTime Player can actually decode inside an .mp4 container.
+    private static let quickTimeCompatibleCodecs: Set<String> = ["h264", "hevc", "h265"]
+
+    /// True once we've probed the finished file and found a video codec (VP9, AV1, ...)
+    /// that QuickTime Player is known not to play back, even though other players (VLC) can.
+    var hasPlaybackCompatibilityWarning: Bool {
+        guard !audioOnly, let codec = videoCodec?.lowercased() else { return false }
+        return !Self.quickTimeCompatibleCodecs.contains(codec)
+    }
 
     init(
         sourceURL: String,
@@ -66,6 +77,7 @@ struct DownloadItem: Identifiable, Codable, Equatable {
         self.eta = ""
         self.errorMessage = nil
         self.finalFilePath = nil
+        self.videoCodec = nil
         self.dateAdded = Date()
     }
 }

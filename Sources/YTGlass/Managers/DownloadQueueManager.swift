@@ -236,6 +236,9 @@ final class DownloadQueueManager: ObservableObject {
             if settings.showNotifications {
                 NotificationManager.shared.notifyCompleted(title: items[idx].title)
             }
+            if !items[idx].audioOnly, let path = items[idx].finalFilePath {
+                probeVideoCodec(itemID: itemID, filePath: path)
+            }
         } else {
             items[idx].status = .failed
             items[idx].errorMessage = LocalizationManager.shared.t(.errorProcessExitCodeTemplate, exitCode)
@@ -247,6 +250,43 @@ final class DownloadQueueManager: ObservableObject {
         discoveredFilePaths[itemID] = nil
         save()
         scheduleNext()
+    }
+
+    /// Reads back the actual video codec of a finished file, so the UI can flag files
+    /// (VP9/AV1 remuxed into .mp4) that QuickTime Player is known not to play.
+    private func probeVideoCodec(itemID: UUID, filePath: String) {
+        guard let ffprobe = YTDLPLocator.ffprobePath() else { return }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: ffprobe)
+        process.arguments = [
+            "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=codec_name",
+            "-of", "default=noprint_wrappers=1:nokey=1",
+            filePath
+        ]
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        process.terminationHandler = { [weak self] _ in
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            let codec = String(data: data, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            DispatchQueue.main.async {
+                guard let self, let idx = self.items.firstIndex(where: { $0.id == itemID }) else { return }
+                guard let codec, !codec.isEmpty else { return }
+                self.items[idx].videoCodec = codec
+                self.save()
+            }
+        }
+
+        do {
+            try process.run()
+        } catch {
+            // Non-fatal: we simply won't show a compatibility badge for this item.
+        }
     }
 
     func cancel(_ id: UUID) {
