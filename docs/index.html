@@ -186,6 +186,26 @@
 
   .install-grid{grid-template-columns:repeat(2,1fr);margin-top:20px;}
   @media(max-width:700px){.install-grid{grid-template-columns:1fr;}}
+  .install-grid .card{text-align:left;}
+  .install-grid code{
+    background:rgba(255,255,255,.09);padding:1px 6px;border-radius:5px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+  }
+  .gk-steps{margin:0;padding-left:0;list-style:none;counter-reset:gk;}
+  .gk-steps li{
+    counter-increment:gk;position:relative;padding-left:34px;margin-bottom:12px;
+    font-size:13.5px;color:var(--muted);line-height:1.55;
+  }
+  .gk-steps li:last-child{margin-bottom:0;}
+  .gk-steps li::before{
+    content:counter(gk);position:absolute;left:0;top:0;
+    width:22px;height:22px;border-radius:7px;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    color:#fff;font-size:11.5px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .gk-steps strong{color:var(--text);}
+  .gk-steps em{color:var(--text);font-style:normal;font-weight:600;}
 
   .card{
     background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
@@ -380,12 +400,21 @@
       <div class="card reveal">
         <div class="icon">⬇️</div>
         <h3>Option A — Download the app</h3>
-        <p>
+        <p style="margin-bottom:14px;">
           <a href="https://github.com/Gab8bit/YTGlass/releases/latest/download/YTGlass-macOS.zip" style="color:#fff;text-decoration:underline;text-underline-offset:2px;">Download the latest release</a>,
-          unzip it and move <code style="background:rgba(255,255,255,.09);padding:1px 6px;border-radius:5px;">YTGlass.app</code> to Applications.
-          Since it isn't notarized with a paid Apple Developer ID, the first launch needs one extra step:
-          <strong>right-click (Control-click) the app → Open → Open</strong> in the dialog that appears. Only needed once.
+          unzip it, then drag <code>YTGlass.app</code> into your <strong>Applications</strong> folder.
         </p>
+        <p style="margin-bottom:8px;">YTGlass isn't notarized with a paid Apple Developer ID, so macOS blocks it the first time. Here's how to allow it — only needed once:</p>
+        <ol class="gk-steps">
+          <li>Open <strong>Applications</strong> and double-click <strong>YTGlass</strong>.</li>
+          <li>macOS will say it can't verify the app and refuse to open it. Click <strong>Done</strong> to close that message.</li>
+          <li>Open <strong>System Settings</strong> (the gear icon in the Dock, or the Apple menu ​​​ → System Settings).</li>
+          <li>Click <strong>Privacy &amp; Security</strong> in the sidebar on the left.</li>
+          <li>Scroll all the way down to the bottom of that page. You'll see a line saying <em>“YTGlass” was blocked to protect your Mac</em>, with a button next to it labeled <strong>Open Anyway</strong>. Click it.</li>
+          <li>Enter your Mac password (or use Touch ID) if asked.</li>
+          <li>One last confirmation dialog appears — click <strong>Open</strong>.</li>
+        </ol>
+        <p style="margin-top:12px;">YTGlass will launch normally from now on, no more warnings.</p>
       </div>
       <div class="card reveal">
         <div class="icon">🛠️</div>
