@@ -4,49 +4,58 @@ struct SettingsView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var clipboard: ClipboardWatcher
     @EnvironmentObject private var updateChecker: UpdateChecker
+    @EnvironmentObject private var loc: LocalizationManager
 
     @State private var isImportingFolder = false
 
     var body: some View {
         Form {
-            Section("Download") {
+            Section(loc.t(.languageSection)) {
+                Picker(loc.t(.languageLabel), selection: $loc.preference) {
+                    Text(loc.t(.languageSystem)).tag(LanguagePreference.system)
+                    Text(loc.t(.languageItalian)).tag(LanguagePreference.italian)
+                    Text(loc.t(.languageEnglish)).tag(LanguagePreference.english)
+                }
+            }
+
+            Section(loc.t(.settingsDownloadSection)) {
                 HStack {
-                    Text("Cartella di destinazione")
+                    Text(loc.t(.destinationFolder))
                     Spacer()
                     Text(settings.destinationFolder.path)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
-                    Button("Scegli…") {
+                    Button(loc.t(.chooseFolder)) {
                         isImportingFolder = true
                     }
                 }
 
                 Stepper(value: $settings.maxConcurrentDownloads, in: 1...5) {
-                    Text("Download simultanei: \(settings.maxConcurrentDownloads)")
+                    Text(loc.t(.simultaneousDownloadsTemplate, settings.maxConcurrentDownloads))
                 }
 
-                Toggle("Scarica sottotitoli per impostazione predefinita", isOn: $settings.defaultSubtitles)
+                Toggle(loc.t(.defaultSubtitlesToggle), isOn: $settings.defaultSubtitles)
             }
 
-            Section("Comportamento") {
-                Toggle("Controlla aggiornamenti di yt-dlp all'avvio", isOn: $settings.autoCheckUpdates)
-                Toggle("Rileva automaticamente URL negli appunti", isOn: $settings.monitorClipboard)
+            Section(loc.t(.behaviorSection)) {
+                Toggle(loc.t(.autoCheckUpdatesToggle), isOn: $settings.autoCheckUpdates)
+                Toggle(loc.t(.clipboardMonitorToggle), isOn: $settings.monitorClipboard)
                     .onChange(of: settings.monitorClipboard) { _, newValue in
                         if newValue { clipboard.start() } else { clipboard.stop() }
                     }
-                Toggle("Notifiche di sistema a fine download", isOn: $settings.showNotifications)
+                Toggle(loc.t(.notificationsToggle), isOn: $settings.showNotifications)
             }
 
-            Section("yt-dlp") {
+            Section(loc.t(.ytdlpSection)) {
                 HStack {
-                    Text("Versione installata")
+                    Text(loc.t(.installedVersion))
                     Spacer()
-                    Text(updateChecker.installedVersion ?? "sconosciuta")
+                    Text(updateChecker.installedVersion ?? loc.t(.unknownVersion))
                         .foregroundStyle(.secondary)
                 }
                 HStack {
-                    Text("Ultima versione disponibile")
+                    Text(loc.t(.latestVersion))
                     Spacer()
                     Text(updateChecker.latestVersion ?? "—")
                         .foregroundStyle(.secondary)
@@ -57,7 +66,7 @@ struct SettingsView: View {
                     if updateChecker.isChecking {
                         ProgressView().controlSize(.small)
                     } else {
-                        Text("Verifica ora")
+                        Text(loc.t(.checkNow))
                     }
                 }
             }

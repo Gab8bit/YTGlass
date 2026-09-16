@@ -15,9 +15,9 @@ enum YTDLPError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .binaryNotFound:
-            return "yt-dlp non è stato trovato. Installalo con Homebrew: brew install yt-dlp"
+            return LocalizationManager.shared.t(.errorYtdlpNotFound)
         case .invalidOutput:
-            return "Risposta di yt-dlp non valida."
+            return LocalizationManager.shared.t(.errorInvalidResponse)
         case .processFailed(let message):
             return message
         }
@@ -64,7 +64,7 @@ enum YTDLPClient {
                 process.waitUntilExit()
 
                 guard process.terminationStatus == 0, !outData.isEmpty else {
-                    let message = String(data: errData, encoding: .utf8) ?? "Impossibile leggere le informazioni del video."
+                    let message = String(data: errData, encoding: .utf8) ?? LocalizationManager.shared.t(.errorCannotReadVideoInfo)
                     continuation.resume(throwing: YTDLPError.processFailed(message))
                     return
                 }
@@ -114,7 +114,7 @@ enum YTDLPClient {
                 process.waitUntilExit()
 
                 guard process.terminationStatus == 0, !outData.isEmpty else {
-                    let message = String(data: errData, encoding: .utf8) ?? "Impossibile leggere la playlist."
+                    let message = String(data: errData, encoding: .utf8) ?? LocalizationManager.shared.t(.errorCannotReadPlaylist)
                     continuation.resume(throwing: YTDLPError.processFailed(message))
                     return
                 }
@@ -133,7 +133,7 @@ enum YTDLPClient {
                 }
 
                 let results: [PlaylistEntry] = entries.compactMap { entry in
-                    let title = entry["title"] as? String ?? "Video senza titolo"
+                    let title = entry["title"] as? String ?? LocalizationManager.shared.t(.untitledVideo)
                     var entryURL = entry["webpage_url"] as? String ?? entry["url"] as? String
                     if let u = entryURL, !u.lowercased().hasPrefix("http") {
                         entryURL = nil

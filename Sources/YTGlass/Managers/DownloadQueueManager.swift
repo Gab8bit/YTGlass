@@ -63,7 +63,7 @@ final class DownloadQueueManager: ObservableObject {
     func addPlaylist(urlString: String, quality: QualityTier, audioOnly: Bool, subtitles: Bool) {
         var placeholder = DownloadItem(
             sourceURL: urlString,
-            title: "Recupero playlist…",
+            title: LocalizationManager.shared.t(.fetchingPlaylistTitle),
             quality: quality,
             audioOnly: audioOnly,
             downloadSubtitles: subtitles
@@ -154,7 +154,7 @@ final class DownloadQueueManager: ObservableObject {
         guard let idx = items.firstIndex(where: { $0.id == itemID }) else { return }
         guard let path = YTDLPLocator.ytdlpPath() else {
             items[idx].status = .failed
-            items[idx].errorMessage = "yt-dlp non trovato. Installalo con Homebrew: brew install yt-dlp"
+            items[idx].errorMessage = LocalizationManager.shared.t(.errorYtdlpNotFound)
             return
         }
 
@@ -238,7 +238,7 @@ final class DownloadQueueManager: ObservableObject {
             }
         } else {
             items[idx].status = .failed
-            items[idx].errorMessage = "yt-dlp è terminato con codice \(exitCode)."
+            items[idx].errorMessage = LocalizationManager.shared.t(.errorProcessExitCodeTemplate, exitCode)
             if settings.showNotifications {
                 NotificationManager.shared.notifyFailed(title: items[idx].title)
             }

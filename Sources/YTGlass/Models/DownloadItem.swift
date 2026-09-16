@@ -10,14 +10,15 @@ enum DownloadStatus: String, Codable {
     case cancelled
 
     var label: String {
+        let loc = LocalizationManager.shared
         switch self {
-        case .queued: return "In coda"
-        case .fetchingInfo: return "Recupero informazioni…"
-        case .downloading: return "Download in corso"
-        case .paused: return "In pausa"
-        case .completed: return "Completato"
-        case .failed: return "Fallito"
-        case .cancelled: return "Annullato"
+        case .queued: return loc.t(.statusQueued)
+        case .fetchingInfo: return loc.t(.statusFetchingInfo)
+        case .downloading: return loc.t(.statusDownloading)
+        case .paused: return loc.t(.statusPaused)
+        case .completed: return loc.t(.statusCompleted)
+        case .failed: return loc.t(.statusFailed)
+        case .cancelled: return loc.t(.statusCancelled)
         }
     }
 }

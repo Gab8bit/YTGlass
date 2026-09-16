@@ -27,12 +27,12 @@ final class UpdateChecker: ObservableObject {
             let (data, _) = try await URLSession.shared.data(for: request)
             guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let tag = json["tag_name"] as? String else {
-                checkError = "Risposta GitHub non valida."
+                checkError = LocalizationManager.shared.t(.errorInvalidGitHubResponse)
                 return
             }
             latestVersion = tag
         } catch {
-            checkError = "Impossibile verificare gli aggiornamenti: \(error.localizedDescription)"
+            checkError = LocalizationManager.shared.t(.errorUpdateCheckFailedTemplate, error.localizedDescription)
         }
     }
 }

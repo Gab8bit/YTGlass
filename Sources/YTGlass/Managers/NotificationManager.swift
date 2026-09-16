@@ -9,11 +9,11 @@ final class NotificationManager {
     }
 
     func notifyCompleted(title: String) {
-        send(title: "Download completato", body: title)
+        send(title: LocalizationManager.shared.t(.notificationCompletedTitle), body: title)
     }
 
     func notifyFailed(title: String) {
-        send(title: "Download fallito", body: title)
+        send(title: LocalizationManager.shared.t(.notificationFailedTitle), body: title)
     }
 
     private func send(title: String, body: String) {

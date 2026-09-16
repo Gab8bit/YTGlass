@@ -6,6 +6,7 @@ struct YTGlassApp: App {
     @StateObject private var queue: DownloadQueueManager
     @StateObject private var clipboard = ClipboardWatcher()
     @StateObject private var updateChecker = UpdateChecker()
+    @StateObject private var loc = LocalizationManager.shared
 
     init() {
         let settings = AppSettings()
@@ -20,6 +21,7 @@ struct YTGlassApp: App {
                 .environmentObject(queue)
                 .environmentObject(clipboard)
                 .environmentObject(updateChecker)
+                .environmentObject(loc)
                 .frame(minWidth: 560, minHeight: 420)
                 .task {
                     NotificationManager.shared.requestAuthorization()
@@ -43,6 +45,7 @@ struct YTGlassApp: App {
                 .environmentObject(queue)
                 .environmentObject(clipboard)
                 .environmentObject(updateChecker)
+                .environmentObject(loc)
                 .frame(width: 460)
         }
     }

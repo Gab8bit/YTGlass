@@ -3,6 +3,7 @@ import SwiftUI
 struct AddDownloadView: View {
     @EnvironmentObject private var queue: DownloadQueueManager
     @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var loc: LocalizationManager
     @Environment(\.dismiss) private var dismiss
 
     @State private var urlText: String
@@ -18,37 +19,37 @@ struct AddDownloadView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Nuovo download")
+            Text(loc.t(.newDownloadTitle))
                 .font(.title3.bold())
 
-            TextField("Incolla un link (YouTube e non solo)…", text: $urlText)
+            TextField(loc.t(.urlPlaceholder), text: $urlText)
                 .textFieldStyle(.roundedBorder)
 
-            Toggle("È una playlist o un canale intero", isOn: $isPlaylist)
+            Toggle(loc.t(.playlistToggle), isOn: $isPlaylist)
 
-            Picker("Formato", selection: $audioOnly) {
-                Text("Video (con audio)").tag(false)
-                Text("Solo audio (MP3)").tag(true)
+            Picker(loc.t(.formatLabel), selection: $audioOnly) {
+                Text(loc.t(.formatVideoOption)).tag(false)
+                Text(loc.t(.formatAudioOption)).tag(true)
             }
             .pickerStyle(.segmented)
 
             if !audioOnly {
-                Picker("Qualità", selection: $quality) {
+                Picker(loc.t(.qualityLabel), selection: $quality) {
                     ForEach(QualityTier.allCases) { tier in
                         Text(tier.label).tag(tier)
                     }
                 }
             }
 
-            Toggle("Scarica sottotitoli (se disponibili)", isOn: $downloadSubtitles)
+            Toggle(loc.t(.subtitlesToggle), isOn: $downloadSubtitles)
 
             Spacer(minLength: 0)
 
             HStack {
                 Spacer()
-                Button("Annulla") { dismiss() }
+                Button(loc.t(.cancelButton)) { dismiss() }
                     .buttonStyle(.glass)
-                Button("Aggiungi alla coda") {
+                Button(loc.t(.addToQueueButton)) {
                     addAndDismiss()
                 }
                 .buttonStyle(.glassProminent)

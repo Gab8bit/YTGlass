@@ -12,14 +12,15 @@ enum QualityTier: String, CaseIterable, Codable, Identifiable {
     var id: String { rawValue }
 
     var label: String {
+        let loc = LocalizationManager.shared
         switch self {
-        case .best: return "Migliore disponibile"
-        case .uhd2160: return "2160p (4K)"
-        case .qhd1440: return "1440p (2K)"
-        case .fhd1080: return "1080p"
-        case .hd720: return "720p"
-        case .sd480: return "480p"
-        case .worst: return "Più leggera disponibile"
+        case .best: return loc.t(.qualityBest)
+        case .uhd2160: return loc.t(.quality2160)
+        case .qhd1440: return loc.t(.quality1440)
+        case .fhd1080: return loc.t(.quality1080)
+        case .hd720: return loc.t(.quality720)
+        case .sd480: return loc.t(.quality480)
+        case .worst: return loc.t(.qualityWorst)
         }
     }
 

@@ -7,6 +7,7 @@ struct QueueRowView: View {
     let isLast: Bool
 
     @EnvironmentObject private var queue: DownloadQueueManager
+    @EnvironmentObject private var loc: LocalizationManager
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -20,7 +21,7 @@ struct QueueRowView: View {
                 HStack(spacing: 6) {
                     badge(item.audioOnly ? "MP3" : item.quality.label, systemImage: item.audioOnly ? "music.note" : "video")
                     if item.downloadSubtitles {
-                        badge("Sottotitoli", systemImage: "captions.bubble")
+                        badge(loc.t(.subtitlesBadge), systemImage: "captions.bubble")
                     }
                     Text(statusText)
                         .font(.caption)

@@ -5,6 +5,7 @@ struct ContentView: View {
     @EnvironmentObject private var queue: DownloadQueueManager
     @EnvironmentObject private var clipboard: ClipboardWatcher
     @EnvironmentObject private var updateChecker: UpdateChecker
+    @EnvironmentObject private var loc: LocalizationManager
 
     @State private var showingAddSheet = false
     @State private var prefillURL = ""
@@ -45,6 +46,7 @@ struct ContentView: View {
             AddDownloadView(prefillURL: prefillURL)
                 .environmentObject(queue)
                 .environmentObject(settings)
+                .environmentObject(loc)
         }
         .frame(minWidth: 560, minHeight: 420)
     }
@@ -65,7 +67,7 @@ struct ContentView: View {
                     prefillURL = ""
                     showingAddSheet = true
                 } label: {
-                    Label("Aggiungi", systemImage: "plus")
+                    Label(loc.t(.addButton), systemImage: "plus")
                 }
                 .buttonStyle(.glassProminent)
 
@@ -82,10 +84,10 @@ struct ContentView: View {
         HStack {
             Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
                 .foregroundStyle(.orange)
-            Text("Aggiornamento yt-dlp disponibile: \(updateChecker.installedVersion ?? "?") → \(updateChecker.latestVersion ?? "?")")
+            Text(loc.t(.updateAvailableTemplate, updateChecker.installedVersion ?? "?", updateChecker.latestVersion ?? "?"))
                 .font(.callout)
             Spacer()
-            Button("Aggiorna ora") {
+            Button(loc.t(.updateNow)) {
                 runBrewUpgrade()
             }
             .buttonStyle(.glass)
@@ -100,16 +102,16 @@ struct ContentView: View {
     private func clipboardBanner(url: String) -> some View {
         HStack {
             Image(systemName: "link")
-            Text("URL rilevato negli appunti")
+            Text(loc.t(.clipboardDetected))
                 .font(.callout)
             Spacer()
-            Button("Aggiungi") {
+            Button(loc.t(.addButton)) {
                 prefillURL = url
                 clipboard.dismiss()
                 showingAddSheet = true
             }
             .buttonStyle(.glassProminent)
-            Button("Ignora") {
+            Button(loc.t(.ignore)) {
                 clipboard.dismiss()
             }
             .buttonStyle(.glass)
@@ -127,9 +129,9 @@ struct ContentView: View {
             Image(systemName: "tray.and.arrow.down")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
-            Text("Nessun download in coda")
+            Text(loc.t(.emptyQueueTitle))
                 .font(.headline)
-            Text("Incolla un link o premi “Aggiungi” per iniziare.")
+            Text(loc.t(.emptyQueueSubtitle))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Spacer()
