@@ -172,6 +172,11 @@ enum YTDLPClient {
         if item.audioOnly {
             args += ["-x", "--audio-format", "mp3", "--audio-quality", "0"]
         } else {
+            // Keep the requested resolution, but prefer H.264/AAC over VP9/AV1/Opus when
+            // both exist at the same resolution — those are the only codecs QuickTime
+            // Player can actually decode inside an .mp4 container. Above ~1080p YouTube
+            // often only offers VP9/AV1, so this can't help at 1440p/2160p.
+            args += ["-S", "res,vcodec:h264,acodec:m4a"]
             args += ["-f", item.quality.formatSelector, "--merge-output-format", "mp4"]
         }
 
