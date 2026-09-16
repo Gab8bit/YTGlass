@@ -3,3 +3,4 @@ YTGlass.app/
 .DS_Store
 *.xcuserstate
 .swiftpm/
+*.zip
